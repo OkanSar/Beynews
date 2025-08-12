@@ -80,25 +80,20 @@ const sideNews = [
 <template>
   <UContainer class="py-10">
     <div class="grid md:grid-cols-4 gap-10 font-serif text-black">
-
       <div class="md:col-span-3 flex flex-col divide-y divide-gray-200">
         <h2 class="font-semibold text-xs uppercase tracking-wide text-gray-700 mb-6 border-b border-gray-300 pb-2">
-          Bültenler
+          AKIŞ
         </h2>
-
         <div
             v-for="post in mainPosts"
             :key="post.id"
             class="py-6 flex flex-col md:flex-row gap-4 md:gap-8"
         >
-          <!-- Resim önce mobilde, sonra masaüstünde -->
           <img
               src="/images/blog-image-3.jpg"
               alt="Haber görseli"
               class="w-full h-48 object-cover rounded-md shadow-sm mb-4 md:mb-0 md:w-52 md:h-32 flex-shrink-0 order-1 md:order-2"
           />
-
-          <!-- Metin -->
           <div class="flex flex-col flex-[1.3] order-2 md:order-1">
             <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
       <span class="px-2 py-0.5 border rounded text-gray-600 font-semibold select-none">

@@ -3,8 +3,9 @@ import { ref } from 'vue'
 
 const links = [
   { label: 'Canlı Gündem', to: '/livebulletins' },
-  { label: 'Hakkında', to: '/about' },
+  { label: 'Hakkımızda', to: '/about' },
   { label: 'Podcast', to: '/podcasts' },
+  { label: 'İletişim', to: '/contact' },
 ]
 
 const mobileOpen = ref(false)
@@ -15,9 +16,9 @@ function closeMenu() {
 </script>
 
 <template>
-  <UContainer class="py-4 flex items-center justify-between font-serif text-black shadow-sm relative">
+  <UContainer class="py-4 flex items-center justify-between text-black shadow-sm relative">
     <NuxtLink to="/" class="font-bold tracking-tight text-4xl z-20 relative">
-      <span class="text-red-600">Bey<span class="text-black">news.</span></span>
+      <span class="text-red-600">bey<span class="text-black">news.</span></span>
     </NuxtLink>
 
     <!-- Desktop Nav -->
@@ -26,7 +27,7 @@ function closeMenu() {
           v-for="(link, i) in links"
           :key="i"
           :to="link.to"
-          class="hover:text-gray-600 font-bold transition-colors"
+          class="hover:text-gray-600 font-bold transition-colors inline-block relative"
       >
         {{ link.label }}
       </NuxtLink>
@@ -65,47 +66,57 @@ function closeMenu() {
           class="absolute top-full left-0 w-full bg-white shadow-md border-t border-gray-200 md:hidden z-10"
       >
         <nav class="flex flex-col p-4 gap-4">
-          <NuxtLink
-              v-for="(link, i) in links"
-              :key="i"
-              :to="link.to"
-              class="font-semibold text-lg hover:text-red-600"
-              @click="closeMenu"
-          >
-            {{ link.label }}
-          </NuxtLink>
+          <div class="flex flex-col gap-4 mb-6 px-4">
+            <NuxtLink
+                v-for="(link, i) in links"
+                :key="i"
+                :to="link.to"
+                class="font-semibold text-lg text-gray-800 hover:text-red-500 relative py-2 transition-colors inline-block"
+                @click="closeMenu"
+            >
+              {{ link.label }}
+              <span
+                  class="absolute left-0 bottom-0 w-0 h-0.5 bg-red-500 transition-all duration-300"
+                  :class="{ 'w-[50px]': $el && $el.matches(':hover') }"
+              ></span>
+            </NuxtLink>
+          </div>
 
-          <hr class="my-2 border-gray-300" />
 
-          <UButton
-              variant="outline"
-              class="w-full text-black border border-gray-400 hover:border-red-500 hover:text-red-600"
-              to="#"
-              @click="closeMenu"
-          >
-            Giriş Yap
-          </UButton>
-          <UButton
-              class="w-full mt-2 bg-red-500 text-white hover:bg-red-600"
-              to="#"
-              @click="closeMenu"
-          >
-            Abone Ol
-          </UButton>
+
+          <div class="flex gap-3 text-center justify-center align-center">
+            <UButton
+                variant="outline"
+                color="neutral"
+                class="flex-1 border border-gray-400 hover:border-red-500 hover:text-red-600 justify-center"
+                to="#"
+                @click="closeMenu"
+            >
+              Giriş Yap
+            </UButton>
+            <UButton
+                class="flex-1 bg-red-600 text-white hover:bg-red-700 justify-center"
+                to="#"
+                @click="closeMenu"
+            >
+              Abone Ol
+            </UButton>
+          </div>
         </nav>
       </div>
     </transition>
   </UContainer>
 </template>
 
+
 <style scoped>
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .fade-slide-enter-from {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-15px);
 }
 .fade-slide-enter-to {
   opacity: 1;
@@ -117,6 +128,10 @@ function closeMenu() {
 }
 .fade-slide-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-15px);
+}
+
+.underline {
+  transition: width 0.3s ease;
 }
 </style>

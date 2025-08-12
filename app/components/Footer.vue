@@ -19,7 +19,7 @@
           <p>Telefon: <a href="tel:+900123456789" class="hover:underline">+90 123 456 78 90</a></p>
           <p>Adres: Örnek Mah. No:10, İstanbul, Türkiye</p>
           <p>
-            <form @submit.prevent="subscribe" class="flex gap-3 mb-5">
+            <UForm :state="formState" @submit.prevent="subscribe" class="flex gap-3 mb-5">
               <input
                   type="email"
                   id="email"
@@ -34,7 +34,7 @@
               >
                 Abone Ol
               </button>
-            </form>
+            </UForm>
             <p v-if="message" class="mt-2 text-sm text-green-600">{{ message }}</p>
           </p>
         </address>
@@ -56,6 +56,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+
+const formState = ref({})
 
 const email = ref("");
 const message = ref("");
