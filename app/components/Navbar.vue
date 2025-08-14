@@ -23,7 +23,6 @@ const subscribe = () => {
   if (!email.value) return
   // Burada API çağrısı veya veri kaydı yapılır
   console.log('Abone oldu:', email.value)
-  open.value = false
   email.value = ''
 }
 async function logout() {
@@ -92,7 +91,7 @@ async function getUserRole(id: string) {
               <div class="py-1">
                 <NuxtLink
                     v-if="role==='admin'"
-                    to="/app/pages/admin"
+                    to="/admin"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Admin Panel
@@ -231,7 +230,7 @@ async function getUserRole(id: string) {
                   <div class="py-1">
                     <NuxtLink
                         v-if="role === 'admin'"
-                        to="/app/pages/admin"
+                        to="/admin"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click="closeMenu"
                     >
