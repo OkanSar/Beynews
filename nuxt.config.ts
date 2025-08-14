@@ -18,10 +18,5 @@ export default defineNuxtConfig({
       callback: '/',
       exclude: ['*'],
     }
-  },
-  ui: {
-    colorMode: {
-      preference: 'light'
-    }
   }
 })

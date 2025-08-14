@@ -17,7 +17,15 @@ const links = [
 function closeMenu() {
   mobileOpen.value = false
 }
+const email = ref('')
 
+const subscribe = () => {
+  if (!email.value) return
+  // Burada API çağrısı veya veri kaydı yapılır
+  console.log('Abone oldu:', email.value)
+  open.value = false
+  email.value = ''
+}
 async function logout() {
   const { error } = await client.auth.signOut()
   if (error) console.error('Çıkış yaparken hata:', error.message)
@@ -43,77 +51,132 @@ async function getUserRole(id: string) {
 
 </script>
 
-
 <template>
   <UContainer class="py-4 flex items-center justify-between text-black shadow-sm relative">
-    <!-- Logo -->
     <NuxtLink to="/" class="font-bold tracking-tight text-4xl z-20 relative">
       <span class="text-red-600">bey<span class="text-black">news.</span></span>
     </NuxtLink>
 
-    <!-- Desktop Nav -->
-    <nav class="hidden md:flex gap-6">
-      <NuxtLink
-          v-for="(link, i) in links"
-          :key="i"
-          :to="link.to"
-          class="hover:text-gray-600 font-bold transition-colors inline-block relative"
-      >
-        {{ link.label }}
-      </NuxtLink>
-    </nav>
-
-    <div class="hidden md:flex items-center gap-3">
-      <div class="relative" v-if="user">
-        <button
-            @click="dropdownOpen = !dropdownOpen"
-            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+    <div class="hidden md:flex md:flex-wrap md:items-center w-full justify-between">
+      <nav class="flex flex-wrap gap-6 justify-center flex-1">
+        <NuxtLink
+            v-for="(link, i) in links"
+            :key="i"
+            :to="link.to"
+            class="hover:text-gray-600 font-bold transition-colors inline-block relative"
         >
-          {{ user.email }}
-          <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 9l-7 7-7-7"/>
-          </svg>
-        </button>
+          {{ link.label }}
+        </NuxtLink>
+      </nav>
 
-        <div
-            v-if="dropdownOpen"
-            @click.outside="dropdownOpen = false"
-            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
-        >
-          <div class="py-1">
-            <NuxtLink
-                v-if="role==='admin'"
-                to="/admin"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Admin Panel
-            </NuxtLink>
-
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <template v-if="user">
+          <div class="relative">
             <button
-                @click="logout"
-                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                @click="dropdownOpen = !dropdownOpen"
+                class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
             >
-              Çıkış Yap
+              {{ user.email }}
+              <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 9l-7 7-7-7"/>
+              </svg>
             </button>
-          </div>
-        </div>
-      </div>
 
-      <div v-else class="flex gap-2">
-        <NuxtLink
-            to="/login"
-            class="text-black border border-transparent hover:border-black bg-white px-4 py-2 rounded"
-        >
-          Giriş Yap
-        </NuxtLink>
-        <NuxtLink
-            to="/signup"
-            class="text-white bg-red-500 hover:bg-white hover:text-black px-4 py-2 rounded"
-        >
-          Abone Ol
-        </NuxtLink>
+            <div
+                v-if="dropdownOpen"
+                @click.outside="dropdownOpen = false"
+                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+            >
+              <div class="py-1">
+                <NuxtLink
+                    v-if="role==='admin'"
+                    to="/app/pages/admin"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Admin Panel
+                </NuxtLink>
+
+                <button
+                    @click="logout"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Çıkış Yap
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <UModal>
+            <UButton color="error" label="Abone Ol" class=" text-white" />
+            <template #content>
+              <form @submit.prevent="subscribe">
+                <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
+                  <p class="text-xl text-white text-center mb-10">
+                    Sıcak gelişmelerden anında haberdar olmak için...
+                  </p>
+
+                  <form @submit.prevent="subscribe" class="flex gap-2">
+                    <UInput
+                        v-model="email"
+                        type="email"
+                        color="error"
+                        size="lg"
+                        placeholder="Email adresinizi girin"
+                        required
+                        class="flex-1"
+                    />
+                    <UButton
+                        type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white">
+                      Abone Ol
+                    </UButton>
+                  </form>
+                </UCard>
+              </form>
+            </template>
+          </UModal>
+        </template>
+
+        <template v-else>
+          <UButton
+              variant="outline"
+              color="neutral"
+              class="bg-white text-black hover:bg-gray-50 justify-center"
+              to="/login">
+            Giriş Yap
+          </UButton>
+          <UModal>
+          <UButton color="error" label="Abone Ol" class=" text-white" />
+            <template #content>
+              <form @submit.prevent="subscribe">
+                <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
+                  <p class="text-xl text-white text-center mb-10">
+                    Sıcak gelişmelerden anında haberdar olmak için...
+                  </p>
+
+                  <form @submit.prevent="subscribe" class="flex gap-2">
+                    <UInput
+                        v-model="email"
+                        type="email"
+                        color="error"
+                        size="lg"
+                        placeholder="Email adresinizi girin"
+                        required
+                        class="flex-1"
+                    />
+                    <UButton
+                        type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white">
+                      Abone Ol
+                    </UButton>
+                  </form>
+                </UCard>
+              </form>
+            </template>
+          </UModal>
+        </template>
       </div>
     </div>
 
@@ -127,7 +190,6 @@ async function getUserRole(id: string) {
         aria-label="Mobil menüyü aç/kapat"
     />
 
-    <!-- Mobile Menu -->
     <transition name="fade-slide">
       <div
           v-if="mobileOpen"
@@ -146,23 +208,116 @@ async function getUserRole(id: string) {
             </NuxtLink>
           </div>
 
-          <div class="flex gap-3 text-center justify-center">
-            <UButton
-                variant="outline"
-                color="neutral"
-                class="flex-1 border border-gray-400 hover:border-red-500 hover:text-red-600 justify-center"
-                to="/login"
-                @click="closeMenu"
-            >
-              Giriş Yap
-            </UButton>
-            <UButton
-                class="flex-1 bg-red-600 text-white hover:bg-red-700 justify-center"
-                to="/signup"
-                @click="closeMenu"
-            >
-              Abone Ol
-            </UButton>
+          <div class="flex flex-col gap-3">
+            <template v-if="user">
+              <div class="relative">
+                <button
+                    @click="dropdownOpen = !dropdownOpen"
+                    class="border border-gray-300 rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between w-full"
+                >
+                  {{ user.email }}
+                  <svg class="h-5 w-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                       viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+
+                <div
+                    v-if="dropdownOpen"
+                    @click.outside="dropdownOpen = false"
+                    class="absolute left-0 mt-2 w-full bg-white rounded-md shadow-lg border border-gray-200 z-50"
+                >
+                  <div class="py-1">
+                    <NuxtLink
+                        v-if="role === 'admin'"
+                        to="/app/pages/admin"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click="closeMenu"
+                    >
+                      Admin Panel
+                    </NuxtLink>
+                    <button
+                        @click="logout"
+                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Çıkış Yap
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <UModal>
+                <UButton color="error" label="Abone Ol" class=" text-white justify-center" />
+                <template #content>
+                  <form @submit.prevent="subscribe">
+                    <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
+                      <p class="text-xl text-white text-center mb-10">
+                        Sıcak gelişmelerden anında haberdar olmak için...
+                      </p>
+
+                      <form @submit.prevent="subscribe" class="flex gap-2">
+                        <UInput
+                            v-model="email"
+                            type="email"
+                            color="error"
+                            size="lg"
+                            placeholder="Email adresinizi girin"
+                            required
+                            class="flex-1"
+                        />
+                        <UButton
+                            type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white justify-center">
+                          Abone Ol
+                        </UButton>
+                      </form>
+                    </UCard>
+                  </form>
+                </template>
+              </UModal>
+            </template>
+
+            <template v-else>
+              <UButton
+                  variant="outline"
+                  color="neutral"
+                  class="border border-gray-400 hover:border-red-500 hover:text-red-600 justify-center"
+                  to="/login"
+                  @click="closeMenu"
+              >
+                Giriş Yap
+              </UButton>
+              <UModal>
+                <UButton color="error" label="Abone Ol" class=" text-white justify-center"/>
+                <template #content>
+                  <form @submit.prevent="subscribe">
+                    <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
+                      <p class="text-xl text-white text-center mb-10">
+                        Sıcak gelişmelerden anında haberdar olmak için...
+                      </p>
+
+                      <form @submit.prevent="subscribe" class="flex gap-2">
+                        <UInput
+                            v-model="email"
+                            type="email"
+                            color="error"
+                            size="lg"
+                            placeholder="Email adresinizi girin"
+                            required
+                            class="flex-1"
+                        />
+                        <UButton
+                            type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white justify-center">
+                          Abone Ol
+                        </UButton>
+                      </form>
+                    </UCard>
+                  </form>
+                </template>
+              </UModal>
+            </template>
           </div>
         </nav>
       </div>
@@ -190,5 +345,11 @@ async function getUserRole(id: string) {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-15px);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>

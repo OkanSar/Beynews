@@ -7,19 +7,16 @@
         </h2>
       </template>
 
-      <UForm @submit="onSubmit" :state="form" class="space-y-4">
-        <u-input placeholder="Email" v-model="form.email" />
-        <UFormGroup label="E-Posta" name="email">
-          <input
+      <UForm @submit="onSubmit" :state="form" class="space-y-4 ">
+        <UFormField label="" name="email"/>
+        <input
               v-model="form.email"
               type="email"
               placeholder="E-posta adresiniz"
               class="w-full mb-3 text-black border-b border-gray-300 focus:outline-none focus:border-black"
               required
           />
-        </UFormGroup>
-
-        <UFormGroup label="Şifre" name="password">
+        <UFormField label="" name="password" class="space-y-4">
           <input
               v-model="form.password"
               type="password"
@@ -27,7 +24,7 @@
               class="w-full mb-10 text-black border-b border-gray-300 focus:outline-none focus:border-black"
               required
           />
-        </UFormGroup>
+        </UFormField>
 
         <UButton
             type="submit"
