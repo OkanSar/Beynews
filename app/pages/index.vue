@@ -1,80 +1,46 @@
 <script setup lang="ts">
+import type {flow} from "~~/types/flow";
+import type {liveAgenda} from "~~/types/liveAgenda";
+
 const email = ref('')
+const flowPosts = ref<flow[]>()
+const sideNews = ref<liveAgenda[]>()
 
 function submitEmail() {
   alert(`Email kaydedildi: ${email.value}`)
   email.value = ''
 }
-const mainPosts = [
-  {
-    id: 1,
-    category: "Finans",
-    title: "Uzun yaşamın sırrı belki de bu şenliklerde saklı: İkarya panagiri'leri",
-    excerpt: "İkarya’daki panagiri’lerin en dikkat çekici yanlarından biri şenliklerde yaş, cinsiyet ve statü farkının neredeyse hiç olmaması. Dedeler de, altı yaşındaki çocuklar da, gençler, dünyanın farklı köşelerinden gelmiş turistler ve adanın kendi sakinleriyle...",
-    author: "İrem Çağıl",
-    date: "10 Ağu 2025",
-    tags: ["Türkiye", "Samos", "Sakız", "Bodrum", "Leros"],
-  },
-  {
-    id: 2,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-  {
-    id: 3,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-  {
-    id: 4,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-  {
-    id: 5,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-  {
-    id: 6,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-  {
-    id: 7,
-    category: "Siyaset",
-    title: "Her şey dahil tatillerin yükselişi: 90’lara dönüş mü, yepyeni bir tatil anlayışı mı?",
-    excerpt: "2025 yazında her şey dahil tatiller popülerliğini artırıyor. Tatilciler hem bütçelerine hem de yeni deneyimlere önem veriyor...",
-    author: "Deniz Yılmaz",
-    date: "8 Ağu 2025",
-    tags: ["Tatil", "Yaz", "Rezervasyon"],
-  },
-]
-const sideNews = [
-  "Balıkesir depreminde iletişim kesildi: Balıkesir'de 10 Ağustos 2025 tarihinde meydana gelen 6,1 büyüklüğündeki depremin ardından cep telefonları çalışmadı ve GSM hatları kilitlendi.",
-  "Balıkesir'de artçı depremler: Balıkesir'de meydana gelen 6,1 büyüklüğündeki depremin ardından 4 tane 4'ten büyük artçı deprem kaydedildi.",
-  "Deprem uzmanları uyardı: Deprem uzmanları, 10 Ağustos'ta Balıkesir'de meydana gelen 6,1 ve 4,0 büyüklüğündeki depremler sonrası Kuzey Ege ve Güney Marmara'daki tehlikeleri vurguladı.",
-]
+function getFirstWords(text: string, wordCount: number) {
+  return text.split(' ').slice(0, wordCount).join(' ')
+}
+onMounted(async () => {
+  try {
+    const {data, error} = await useFetch('/api/flow', {
+      method: 'GET',
+    })
+    if(error.value){
+    console.error('API hatası:', error.value)
+    return error
+    }
+    flowPosts.value = data.value ?? []
+  }
+   catch(error) {
+    console.error('Fetch hatası:', error)
+   }
+   try {
+     const {data, error} = await useFetch('/api/liveAgenda', {
+       method: 'GET',
+     })
+     if(error.value){
+       console.error('API hatası:', error.value)
+       return error
+     }
+     sideNews.value = data.value ? data.value.slice(0, 3) : []
+   }
+   catch (error) {
+    console.error('Fetch hhatası: ',error)
+   }
+})
 </script>
 
 <template>
@@ -85,29 +51,29 @@ const sideNews = [
           AKIŞ
         </h2>
         <div
-            v-for="post in mainPosts"
+            v-for="post in flowPosts"
             :key="post.id"
             class="py-6 flex flex-col md:flex-row gap-4 md:gap-8"
         >
           <img
-              src="/images/blog-image-3.jpg"
+              :src='`${post.imagePath}`'
               alt="Haber görseli"
               class="w-full h-48 object-cover rounded-md shadow-sm mb-4 md:mb-0 md:w-52 md:h-32 flex-shrink-0 order-1 md:order-2"
           />
           <div class="flex flex-col flex-[1.3] order-2 md:order-1">
             <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
       <span class="px-2 py-0.5 border rounded text-gray-600 font-semibold select-none">
-        {{ post.category }}
+        {{ post.subject }}
       </span>
             </div>
             <h3 class="text-xl font-serif font-semibold mb-2 hover:text-gray-700 cursor-pointer leading-snug">
               {{ post.title }}
             </h3>
             <p class="text-gray-600 mb-2 leading-relaxed">
-              {{ post.excerpt }}
+              {{ post.description }}
             </p>
             <div class="text-xs text-gray-400 mb-3">
-              {{ post.author }} &middot; {{ post.date }}
+              Okan Sarıoğlu &middot; {{ post.date }}
             </div>
             <div class="flex flex-wrap gap-2">
       <span
@@ -131,12 +97,11 @@ const sideNews = [
             :key="idx"
             class="border-b border-gray-300 pb-3 last:border-none"
         >
-          <p class="font-semibold mb-1">• {{ news.split(':')[0] }}:</p>
+          <p class="font-semibold mb-1">•{{news.title}}:</p>
           <p class="text-gray-700">
-            {{ news.split(':').slice(1).join(':').trim() }}
+            {{ getFirstWords(news.description,10)}}...
           </p>
         </div>
-
         <div class="mt-6 p-4 border border-gray-300 rounded bg-gray-50">
           <h3 class="font-semibold mb-2 text-gray-900">Bültene Kaydol</h3>
           <form @submit.prevent="submitEmail">

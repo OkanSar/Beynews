@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+.u-input input {
+    color: black !important;       /* yazı rengini siyah yapar */
+    caret-color: black !important; /* imleç rengini siyah yapar */
+}
+
+.u-input input::placeholder {
+    color: #000 !important;        /* placeholder siyah */
+    opacity: 0.5;                  /* isteğe bağlı opacity */
+}

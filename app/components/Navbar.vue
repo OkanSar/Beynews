@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+
+const client = useSupabaseClient()
+const user = useSupabaseUser()
+const role = ref('')
+const dropdownOpen = ref(false)
+const mobileOpen = ref(false)
 
 const links = [
   { label: 'Canlı Gündem', to: '/livebulletins' },
@@ -8,15 +14,39 @@ const links = [
   { label: 'İletişim', to: '/contact' },
 ]
 
-const mobileOpen = ref(false)
-
 function closeMenu() {
   mobileOpen.value = false
 }
+
+async function logout() {
+  const { error } = await client.auth.signOut()
+  if (error) console.error('Çıkış yaparken hata:', error.message)
+  else window.location.href = '/'
+}
+
+onMounted(() => {
+  if (user.value?.id) {
+    getUserRole(user.value.id)
+  }
+})
+
+watch(() => user.value?.id, (newId) => {
+  if (newId) {
+    getUserRole(newId)
+  }
+})
+
+async function getUserRole(id: string) {
+  const data = await $fetch(`/api/user/${id}`)
+  role.value = data.role
+}
+
 </script>
+
 
 <template>
   <UContainer class="py-4 flex items-center justify-between text-black shadow-sm relative">
+    <!-- Logo -->
     <NuxtLink to="/" class="font-bold tracking-tight text-4xl z-20 relative">
       <span class="text-red-600">bey<span class="text-black">news.</span></span>
     </NuxtLink>
@@ -34,19 +64,57 @@ function closeMenu() {
     </nav>
 
     <div class="hidden md:flex items-center gap-3">
-      <UButton
-          variant="ghost"
-          class="text-black border border-transparent hover:border-black bg-white hover:bg-white"
-          to="#"
-      >
-        Giriş Yap
-      </UButton>
-      <UButton
-          class="text-white border border-transparent hover:border-black bg-red-500 hover:bg-white hover:text-black"
-          link-to="#"
-      >
-        Abone Ol
-      </UButton>
+      <div class="relative" v-if="user">
+        <button
+            @click="dropdownOpen = !dropdownOpen"
+            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+        >
+          {{ user.email }}
+          <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <div
+            v-if="dropdownOpen"
+            @click.outside="dropdownOpen = false"
+            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+        >
+          <div class="py-1">
+            <NuxtLink
+                v-if="role==='admin'"
+                to="/admin"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Admin Panel
+            </NuxtLink>
+
+            <button
+                @click="logout"
+                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Çıkış Yap
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="flex gap-2">
+        <NuxtLink
+            to="/login"
+            class="text-black border border-transparent hover:border-black bg-white px-4 py-2 rounded"
+        >
+          Giriş Yap
+        </NuxtLink>
+        <NuxtLink
+            to="/signup"
+            class="text-white bg-red-500 hover:bg-white hover:text-black px-4 py-2 rounded"
+        >
+          Abone Ol
+        </NuxtLink>
+      </div>
     </div>
 
     <!-- Mobile Hamburger -->
@@ -75,28 +143,22 @@ function closeMenu() {
                 @click="closeMenu"
             >
               {{ link.label }}
-              <span
-                  class="absolute left-0 bottom-0 w-0 h-0.5 bg-red-500 transition-all duration-300"
-                  :class="{ 'w-[50px]': $el && $el.matches(':hover') }"
-              ></span>
             </NuxtLink>
           </div>
 
-
-
-          <div class="flex gap-3 text-center justify-center align-center">
+          <div class="flex gap-3 text-center justify-center">
             <UButton
                 variant="outline"
                 color="neutral"
                 class="flex-1 border border-gray-400 hover:border-red-500 hover:text-red-600 justify-center"
-                to="#"
+                to="/login"
                 @click="closeMenu"
             >
               Giriş Yap
             </UButton>
             <UButton
                 class="flex-1 bg-red-600 text-white hover:bg-red-700 justify-center"
-                to="#"
+                to="/signup"
                 @click="closeMenu"
             >
               Abone Ol
@@ -107,7 +169,6 @@ function closeMenu() {
     </transition>
   </UContainer>
 </template>
-
 
 <style scoped>
 .fade-slide-enter-active,
@@ -129,9 +190,5 @@ function closeMenu() {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-15px);
-}
-
-.underline {
-  transition: width 0.3s ease;
 }
 </style>
