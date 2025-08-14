@@ -107,12 +107,12 @@ async function getUserRole(id: string) {
             </div>
           </div>
 
-          <UModal>
+          <UModal :ui="{ content: 'bg-white rounded-xl shadow-lg' }">
             <UButton color="error" label="Abone Ol" class=" text-white" />
             <template #content>
               <form @submit.prevent="subscribe">
-                <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
-                  <p class="text-xl text-white text-center mb-10">
+                <UCard class="p-10 flex flex-col gap-4" :ui="{ root: 'bg-white' ,body:' text-black' }">
+                  <p class="text-xl font-serif text-center mb-10">
                     Sıcak gelişmelerden anında haberdar olmak için...
                   </p>
 
@@ -125,6 +125,7 @@ async function getUserRole(id: string) {
                         placeholder="Email adresinizi girin"
                         required
                         class="flex-1"
+                        :ui="{ base:'bg-white'}"
                     />
                     <UButton
                         type="submit"
@@ -146,12 +147,12 @@ async function getUserRole(id: string) {
               to="/login">
             Giriş Yap
           </UButton>
-          <UModal>
-          <UButton color="error" label="Abone Ol" class=" text-white" />
+          <UModal :ui="{ content: 'bg-white rounded-xl shadow-lg' }">
+            <UButton color="error" label="Abone Ol" class=" text-white" />
             <template #content>
               <form @submit.prevent="subscribe">
-                <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
-                  <p class="text-xl text-white text-center mb-10">
+                <UCard class="p-10 flex flex-col gap-4" :ui="{ root: 'bg-white' ,body:' text-black' }">
+                  <p class="text-xl font-serif text-center mb-10">
                     Sıcak gelişmelerden anında haberdar olmak için...
                   </p>
 
@@ -164,6 +165,7 @@ async function getUserRole(id: string) {
                         placeholder="Email adresinizi girin"
                         required
                         class="flex-1"
+                        :ui="{ base:'bg-white'}"
                     />
                     <UButton
                         type="submit"
@@ -246,12 +248,12 @@ async function getUserRole(id: string) {
                 </div>
               </div>
 
-              <UModal>
+              <UModal :ui="{ content: 'bg-white rounded-xl shadow-lg' }">
                 <UButton color="error" label="Abone Ol" class=" text-white justify-center" />
                 <template #content>
                   <form @submit.prevent="subscribe">
-                    <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
-                      <p class="text-xl text-white text-center mb-10">
+                    <UCard class="p-10 flex flex-col gap-4" :ui="{ root: 'bg-white' ,body:' text-black' }">
+                      <p class="text-xl font-serif text-center mb-10">
                         Sıcak gelişmelerden anında haberdar olmak için...
                       </p>
 
@@ -264,10 +266,11 @@ async function getUserRole(id: string) {
                             placeholder="Email adresinizi girin"
                             required
                             class="flex-1"
+                            :ui="{ base:'bg-white'}"
                         />
                         <UButton
                             type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white justify-center">
+                            class="bg-red-600 hover:bg-red-700 text-white">
                           Abone Ol
                         </UButton>
                       </form>
@@ -287,12 +290,12 @@ async function getUserRole(id: string) {
               >
                 Giriş Yap
               </UButton>
-              <UModal>
-                <UButton color="error" label="Abone Ol" class=" text-white justify-center"/>
+              <UModal :ui="{ content: 'bg-white rounded-xl shadow-lg' }">
+                <UButton color="error" label="Abone Ol" class=" text-white justify-center" />
                 <template #content>
                   <form @submit.prevent="subscribe">
-                    <UCard class="p-6 max-w-md mx-auto flex flex-col gap-4">
-                      <p class="text-xl text-white text-center mb-10">
+                    <UCard class="p-10 flex flex-col gap-4" :ui="{ root: 'bg-white' ,body:' text-black' }">
+                      <p class="text-xl font-serif text-center mb-10">
                         Sıcak gelişmelerden anında haberdar olmak için...
                       </p>
 
@@ -305,10 +308,11 @@ async function getUserRole(id: string) {
                             placeholder="Email adresinizi girin"
                             required
                             class="flex-1"
+                            :ui="{ base:'bg-white'}"
                         />
                         <UButton
                             type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white justify-center">
+                            class="bg-red-600 hover:bg-red-700 text-white">
                           Abone Ol
                         </UButton>
                       </form>
