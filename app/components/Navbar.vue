@@ -125,7 +125,7 @@ async function getUserRole(id: string) {
                         placeholder="Email adresinizi girin"
                         required
                         class="flex-1"
-                        :ui="{ base:'bg-white'}"
+                        :ui="{ base:'bg-white text-black'}"
                     />
                     <UButton
                         type="submit"
@@ -165,7 +165,7 @@ async function getUserRole(id: string) {
                         placeholder="Email adresinizi girin"
                         required
                         class="flex-1"
-                        :ui="{ base:'bg-white'}"
+                        :ui="{ base:'bg-white text-black'}"
                     />
                     <UButton
                         type="submit"
@@ -266,7 +266,7 @@ async function getUserRole(id: string) {
                             placeholder="Email adresinizi girin"
                             required
                             class="flex-1"
-                            :ui="{ base:'bg-white'}"
+                            :ui="{ base:'bg-white text-black'}"
                         />
                         <UButton
                             type="submit"
@@ -308,7 +308,7 @@ async function getUserRole(id: string) {
                             placeholder="Email adresinizi girin"
                             required
                             class="flex-1"
-                            :ui="{ base:'bg-white'}"
+                            :ui="{ base:'bg-white text-black'}"
                         />
                         <UButton
                             type="submit"
